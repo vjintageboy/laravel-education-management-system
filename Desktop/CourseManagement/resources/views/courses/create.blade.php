@@ -1,35 +1,34 @@
 @extends('layouts.app')
 
+@section('title', 'Thêm khóa học')
+
 @section('content')
 <div class="container">
-    <h1>Add New Course</h1>
+    <h1>Thêm khóa học mới</h1>
     <form action="{{ route('courses.store') }}" method="POST">
         @csrf
-        <div class="form-group">
-            <label for="name">Course Name</label>
-            <input type="text" class="form-control" id="name" name="name" required>
+        <div class="mb-3">
+            <label for="name" class="form-label">Tên khóa học</label>
+            <input type="text" class="form-control @error('name') is-invalid @enderror" id="name" name="name" placeholder="Nhập tên khóa học">
+            @error('name') <div class="invalid-feedback">{{ $message }}</div> @enderror
         </div>
-        <div class="form-group">
-            <label for="description">Description</label>
-            <textarea class="form-control" id="description" name="description" required></textarea>
+        <div class="mb-3">
+            <label for="description" class="form-label">Mô tả</label>
+            <textarea class="form-control @error('description') is-invalid @enderror" id="description" name="description" placeholder="Nhập mô tả khóa học"></textarea>
+            @error('description') <div class="invalid-feedback">{{ $message }}</div> @enderror
         </div>
-        <div class="form-group">
-            <label for="teacher_id">Teacher</label>
-            <select class="form-control" id="teacher_id" name="teacher_id" required>
+        <div class="mb-3">
+            <label for="teacher_id" class="form-label">Giảng viên</label>
+            <select class="form-control" id="teacher_id" name="teacher_id">
                 @foreach ($teachers as $teacher)
                     <option value="{{ $teacher->id }}">{{ $teacher->name }}</option>
                 @endforeach
             </select>
         </div>
-        <div class="form-group">
-            <label for="start_date">Start Date</label>
-            <input type="date" class="form-control" id="start_date" name="start_date" required>
+        <div class="mb-3">
+            <label for="start_date" class="form-label">Ngày bắt đầu</label>
+            <input type="date" class="form-control" id="start_date" name="start_date">
         </div>
-        <div class="form-group">
-            <label for="end_date">End Date</label>
-            <input type="date" class="form-control" id="end_date" name="end_date" required>
-        </div>
-        <button type="submit" class="btn btn-primary">Create Course</button>
-    </form>
-</div>
-@endsection
+        <div class="mb-3">
+            <label for="end_date" class="form-label">Ngày kết thúc</label>
+            <input type="date" class="form-control" id="end_date"
