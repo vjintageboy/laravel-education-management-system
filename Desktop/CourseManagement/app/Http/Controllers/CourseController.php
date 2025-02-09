@@ -13,7 +13,7 @@ class CourseController extends Controller
      */
     public function index()
     {
-        $courses = Course::all();
+        $courses = Course::with('teacher')->get(); // Eager load the teacher relationship
         return view('courses.index', compact('courses'));
     }
 
@@ -56,13 +56,12 @@ class CourseController extends Controller
      * Show the form for editing the specified resource.
      */
     public function edit($id)
-{
-    $course = Course::findOrFail($id); // Tìm khóa học theo ID
-    $teachers = Teacher::all(); // Lấy danh sách tất cả giảng viên
+    {
+        $course = Course::findOrFail($id); // Find course by ID
+        $teachers = Teacher::all(); // Get all teachers
 
-    return view('courses.edit', compact('course', 'teachers'));
-}
-
+        return view('courses.edit', compact('course', 'teachers'));
+    }
 
     /**
      * Update the specified resource in storage.
