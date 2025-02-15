@@ -31,4 +31,9 @@
         </div>
         <div class="mb-3">
             <label for="end_date" class="form-label">Ngày kết thúc</label>
-            <input type="date" class="form-control" id="end_date"
+            <input type="date" class="form-control" id="end_date" name="end_date">
+        </div>
+        <button type="submit" class="btn btn-primary">Thêm khóa học</button>
+    </form>
+</div>
+@endsection
