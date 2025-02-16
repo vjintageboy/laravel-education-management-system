@@ -1,10 +1,12 @@
 <style>
+    /* Chỉnh vị trí logout container */
     .logout-container {
         position: absolute;
         top: 10px;
         right: 15px;
     }
 
+    /* Nút logout */
     .logout-button {
         background-color: #dc3545;
         color: white;
@@ -25,16 +27,18 @@
     .logout-button i {
         margin-right: 5px;
     }
+
+    /* Cải tiến bố cục navbar */
+    .navbar-nav.ml-auto {
+        display: flex;
+        align-items: center;
+    }
 </style>
+
 
 <nav class="main-header navbar navbar-expand navbar-white navbar-light">
     <!-- Sidebar toggle button -->
     <ul class="navbar-nav">
-        <li class="nav-item">
-            <a class="nav-link" data-widget="pushmenu" href="#" role="button">
-                <i class="fas fa-bars"></i>
-            </a>
-        </li>
         <li class="nav-item d-none d-sm-inline-block">
             <a href="/" class="nav-link">Trang chủ</a>
         </li>
@@ -47,9 +51,16 @@
         <li class="nav-item d-none d-sm-inline-block">
             <a href="/students" class="nav-link">Sinh viên</a>
         </li>
+        @auth
+        <li class="nav-item d-none d-sm-inline-block">
+            <a href="{{ route('profile.edit') }}" class="nav-link">Tài khoản</a>
+        </li>
+        @endauth
     </ul>
+
     <ul class="navbar-nav ml-auto">
         @auth
+        <!-- Hiển thị thông tin người dùng và nút logout -->
         <div class="logout-container">
             <x-dropdown align="right" width="48">
                 <x-slot name="trigger">
