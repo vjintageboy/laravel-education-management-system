@@ -33,7 +33,8 @@
             <label for="end_date" class="form-label">Ngày kết thúc</label>
             <input type="date" class="form-control" id="end_date" name="end_date">
         </div>
-        <button type="submit" class="btn btn-primary">Thêm khóa học</button>
+        <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Cập nhật khóa học</button>
+        <a href="{{ route('courses.index') }}" class="btn btn-secondary"><i class="fas fa-arrow-left"></i> Quay lại</a>
     </form>
 </div>
 @endsection
