@@ -1,13 +1,11 @@
 @extends('layouts.app')
-
 @section('title', 'Quản lý khóa học')
-
 @section('content')
 <div class="container">
     <h1 class="mb-4">Quản lý khóa học</h1>
     <a href="{{ route('courses.create') }}" class="btn btn-success mb-3"><i class="fas fa-plus"></i> Thêm khóa học</a>
-
-    <table class="table table-striped">
+    
+    <table id="coursesTable" class="table table-striped">
         <thead class="table-dark">
             <tr>
                 <th>Tên khóa học</th>
@@ -40,4 +38,18 @@
         </tbody>
     </table>
 </div>
+
+@section('scripts')
+<script>
+    $(document).ready(function() {
+        $('#coursesTable').DataTable({
+            language: {
+                search: "Tìm kiếm:",
+                lengthMenu: "Hiển thị _MENU_ mục",
+                info: "Hiển thị từ _START_ đến _END_ trong tổng số _TOTAL_ mục"
+            }
+        });
+    });
+</script>
+@endsection
 @endsection
