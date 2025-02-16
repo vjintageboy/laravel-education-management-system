@@ -12,7 +12,8 @@ class TeacherController extends Controller
      */
     public function index()
     {
-        //
+        $teachers = Teacher::withCount('courses')->get();
+        return view('teachers.index', compact('teachers'));
     }
 
     /**
@@ -20,7 +21,7 @@ class TeacherController extends Controller
      */
     public function create()
     {
-        //
+        return view('teachers.create');
     }
 
     /**
@@ -28,7 +29,16 @@ class TeacherController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:teachers',
+            'specialization' => 'required|string|max:255'
+        ]);
+
+        Teacher::create($validated);
+
+        return redirect()->route('teachers.index')
+            ->with('success', 'Giảng viên đã được thêm thành công!');
     }
 
     /**
@@ -36,7 +46,8 @@ class TeacherController extends Controller
      */
     public function show(Teacher $teacher)
     {
-        //
+        $teacher->load('courses');
+        return view('teachers.show', compact('teacher'));
     }
 
     /**
@@ -44,7 +55,7 @@ class TeacherController extends Controller
      */
     public function edit(Teacher $teacher)
     {
-        //
+        return view('teachers.edit', compact('teacher'));
     }
 
     /**
@@ -52,7 +63,16 @@ class TeacherController extends Controller
      */
     public function update(Request $request, Teacher $teacher)
     {
-        //
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:teachers,email,'.$teacher->id,
+            'specialization' => 'required|string|max:255'
+        ]);
+
+        $teacher->update($validated);
+
+        return redirect()->route('teachers.index')
+            ->with('success', 'Thông tin giảng viên đã được cập nhật!');
     }
 
     /**
@@ -60,6 +80,14 @@ class TeacherController extends Controller
      */
     public function destroy(Teacher $teacher)
     {
-        //
+        if ($teacher->courses()->exists()) {
+            return redirect()->route('teachers.index')
+                ->with('error', 'Không thể xóa giảng viên vì đang có khóa học liên quan!');
+        }
+
+        $teacher->delete();
+        
+        return redirect()->route('teachers.index')
+            ->with('success', 'Giảng viên đã được xóa thành công!');
     }
 }

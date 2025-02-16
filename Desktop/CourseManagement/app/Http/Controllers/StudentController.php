@@ -12,7 +12,8 @@ class StudentController extends Controller
      */
     public function index()
     {
-        //
+        $students = Student::all();
+        return view('students.index', compact('students'));
     }
 
     /**
@@ -20,7 +21,7 @@ class StudentController extends Controller
      */
     public function create()
     {
-        //
+        return view('students.create');
     }
 
     /**
@@ -28,7 +29,17 @@ class StudentController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'student_code' => 'required|string|max:255|unique:students',
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:students',
+            'date_of_birth' => 'required|date'
+        ]);
+
+        Student::create($validated);
+
+        return redirect()->route('students.index')
+            ->with('success', 'Sinh viên đã được thêm thành công!');
     }
 
     /**
@@ -36,7 +47,7 @@ class StudentController extends Controller
      */
     public function show(Student $student)
     {
-        //
+        return view('students.show', compact('student'));
     }
 
     /**
@@ -44,7 +55,7 @@ class StudentController extends Controller
      */
     public function edit(Student $student)
     {
-        //
+        return view('students.edit', compact('student'));
     }
 
     /**
@@ -52,7 +63,17 @@ class StudentController extends Controller
      */
     public function update(Request $request, Student $student)
     {
-        //
+        $validated = $request->validate([
+            'student_code' => 'required|string|max:255|unique:students,student_code,'.$student->id,
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:students,email,'.$student->id,
+            'date_of_birth' => 'required|date'
+        ]);
+
+        $student->update($validated);
+
+        return redirect()->route('students.index')
+            ->with('success', 'Thông tin sinh viên đã được cập nhật!');
     }
 
     /**
@@ -60,6 +81,8 @@ class StudentController extends Controller
      */
     public function destroy(Student $student)
     {
-        //
+        $student->delete();
+        return redirect()->route('students.index')
+            ->with('success', 'Sinh viên đã được xóa thành công!');
     }
 }
