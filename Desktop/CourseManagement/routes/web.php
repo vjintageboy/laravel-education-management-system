@@ -5,8 +5,14 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CourseController;
 use App\Http\Controllers\TeacherController;
 use App\Http\Controllers\StudentController;
+use App\Http\Controllers\HomeController;
 
 Route::get('/courses/data', [CourseController::class, 'getData'])->name('courses.data');
+
+
+Route::get('/', function () {
+    return view('home'); // Hoặc return view('home');
+})->name('home');
 
 // Bảo vệ route courses, yêu cầu đăng nhập trước khi truy cập
 Route::middleware('auth')->group(function () {
@@ -15,13 +21,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('students', StudentController::class);
 });
 
-Route::get('/', function () {
-    return redirect()->route('courses.index'); 
-})->middleware('auth'); // Chỉ cho phép truy cập nếu đã đăng nhập
-
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+Route::get('/', [HomeController::class, 'index'])->middleware('auth');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

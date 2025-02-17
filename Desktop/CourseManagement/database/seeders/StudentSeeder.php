@@ -1,8 +1,10 @@
 <?php
 
 namespace Database\Seeders;
-
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 use App\Models\Student;
 
 class StudentSeeder extends Seeder
@@ -10,10 +12,19 @@ class StudentSeeder extends Seeder
     /**
      * Run the database seeds.
      */
-    public function run()
+    public function run(): void
     {
-        Student::create(['name' => 'Alice Brown', 'email' => 'alice@example.com', 'date_of_birth' => '2000-01-15']);
-        Student::create(['name' => 'Bob White', 'email' => 'bob@example.com', 'date_of_birth' => '1999-05-22']);
-        Student::create(['name' => 'Charlie Green', 'email' => 'charlie@example.com', 'date_of_birth' => '2001-09-30']);
+        $students = [];
+        for ($i = 1; $i <= 29; $i++) {
+            $students[] = [
+                'name' => 'Student ' . $i,
+                'email' => 'student' . $i . '@example.com',
+                'date_of_birth' => now()->subYears(rand(18, 25))->format('Y-m-d'),
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+        }
+        
+        DB::table('students')->insert($students);
     }
 }
