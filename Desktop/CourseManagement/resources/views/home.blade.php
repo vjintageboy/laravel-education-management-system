@@ -47,6 +47,21 @@
                 </a>
             </div>
         </div>
+
+        <div class="col-md-4">
+            <div class="small-box bg-danger">
+                <div class="inner">
+                    <h3>{{ $enrollmentCount }}</h3>
+                    <p>Đăng ký</p>
+                </div>
+                <div class="icon">
+                    <i class="fas fa-clipboard-list"></i>
+                </div>
+                <a href="{{ route('enrollments.index') }}" class="small-box-footer">
+                    Xem chi tiết <i class="fas fa-arrow-circle-right"></i>
+                </a>
+            </div>
+        </div>
     </div>
 </div>
 @endsection
