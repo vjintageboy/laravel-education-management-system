@@ -6,7 +6,7 @@
 
 
 ## Mô Tả Ứng Dụng
-Hệ thống quản lý khóa học là một ứng dụng web giúp quản lý các khóa học, giảng viên và sinh viên một cách hiệu quả. Ứng dụng cung cấp các chức năng CRUD (Tạo, Đọc, Sửa, Xóa) cho các đối tượng chính: Khóa học, Giảng viên và Sinh viên.
+Hệ thống quản lý khóa học là một ứng dụng web giúp quản lý các khóa học, đăng ký, giảng viên và sinh viên một cách hiệu quả. Ứng dụng cung cấp các chức năng CRUD (Tạo, Đọc, Sửa, Xóa) cho các đối tượng chính: Khóa học, Giảng viên và Sinh viên.
 
 ## Mục Đích
 - Quản lý thông tin các khóa học
@@ -31,117 +31,98 @@ Dự án sử dụng các công nghệ sau:
 ## Quá Trình Phát Triển Phần Mềm
 
 ### Sơ Đồ Khối (UML) - Cấu trúc Database
-```mermaid
-classDiagram
-    class User {
-        +int id
-        +string name
-        +string email
-        +string password
-        +string remember_token
-    }
+![Database Schema](https://img.upanh.tv/2025/02/18/Anh-man-hinh-2025-02-18-luc-11.54.33.png)
 
-    class Teacher {
-        +int id
-        +string name
-        +string email
-        +string phone
-        +timestamps created_at
-        +timestamps updated_at
-    }
-
-    class Student {
-        +int id
-        +string name
-        +string email
-        +string phone
-        +timestamps created_at
-        +timestamps updated_at
-    }
-
-    class Course {
-        +int id
-        +string name
-        +text description
-        +date start_date
-        +date end_date
-        +timestamps created_at
-        +timestamps updated_at
-    }
-
-    class Enrollment {
-        +int id
-        +int course_id
-        +int student_id
-        +timestamps created_at
-        +timestamps updated_at
-    }
-
-    %% Quan hệ giữa các bảng
-    Course --> Teacher : "1" belongsTo "1"
-    Teacher --> Course : "1" hasMany "*"
-    Student --> Enrollment : "1" enrolls "*"
-    Enrollment --> Course : "*" belongsTo "1"
-    User <|-- Teacher : "1:1"
-    User <|-- Student : "1:1"
-```
 ### Sơ Đồ Cấu Trúc Project - Nâng Cấp
 ```mermaid
-flowchart TD
-    A[Project Root] --> B[app]
-    A --> C[resources]
-    A --> D[database]
-    A --> E[config]
-    A --> F[public]
-    A --> G[routes]
-    A --> H[tests]
-    A --> I[storage]
-    A --> J[bootstrap]
+graph TB
+    User((User))
+    
+    subgraph "Course Management System"
+        subgraph "Web Interface"
+            WebApp["Web Application<br>(Laravel Blade)"]
+            
+            subgraph "Frontend Components"
+                AuthViews["Authentication Views<br>(Blade Templates)"]
+                CourseViews["Course Management Views<br>(Blade Templates)"]
+                TeacherViews["Teacher Management Views<br>(Blade Templates)"]
+                StudentViews["Student Management Views<br>(Blade Templates)"]
+                ProfileViews["Profile Management Views<br>(Blade Templates)"]
+            end
+        end
+        
+        subgraph "Application Core"
+            Router["Router<br>(Laravel Routes)"]
+            
+            subgraph "Controllers"
+                AuthController["Auth Controllers<br>(PHP)"]
+                CourseController["Course Controller<br>(PHP)"]
+                TeacherController["Teacher Controller<br>(PHP)"]
+                StudentController["Student Controller<br>(PHP)"]
+                ProfileController["Profile Controller<br>(PHP)"]
+            end
+            
+            subgraph "Models"
+                UserModel["User Model<br>(Eloquent)"]
+                CourseModel["Course Model<br>(Eloquent)"]
+                TeacherModel["Teacher Model<br>(Eloquent)"]
+                StudentModel["Student Model<br>(Eloquent)"]
+                EnrollmentModel["Enrollment Model<br>(Eloquent)"]
+            end
+            
+            subgraph "Services"
+                AuthService["Authentication Service<br>(Laravel Breeze)"]
+                DataTables["DataTables Service<br>(Yajra)"]
+                ValidationService["Validation Service<br>(Laravel)"]
+            end
+        end
+        
+        subgraph "Data Layer"
+            Database[("Database<br>SQLite")]
+            Cache["Cache Storage<br>(Laravel Cache)"]
+        end
+    end
 
-    B --> B1[Models]
-    B --> B2[Http]
-    B --> B3[Providers]
-    B --> B4[Console]
-
-    B1 --> B1a[Course]
-    B1 --> B1b[Teacher]
-    B1 --> B1c[Student]
-
-    B2 --> B2a[Controllers]
-    B2 --> B2b[Middleware]
-    B2 --> B2c[Requests]
-
-    C --> C1[views]
-    C --> C2[lang]
-    C --> C3[js]
-    C --> C4[css]
-
-    D --> D1[migrations]
-    D --> D2[seeds]
-    D --> D3[factories]
-
-    E --> E1[app.php]
-    E --> E2[database.php]
-    E --> E3[mail.php]
-
-    F --> F1[css]
-    F --> F2[js]
-    F --> F3[images]
-
-    G --> G1[web.php]
-    G --> G2[api.php]
-
-    H --> H1[Feature]
-    H --> H2[Unit]
-
-    I --> I1[logs]
-    I --> I2[framework]
-    I --> I3[app]
-
-    J --> J1[cache]
-    J --> J2[app.php]
+    %% Connections
+    User -->|interacts with| WebApp
+    
+    %% Frontend to Router
+    WebApp -->|routes requests to| Router
+    
+    %% Router to Controllers
+    Router -->|dispatches to| AuthController
+    Router -->|dispatches to| CourseController
+    Router -->|dispatches to| TeacherController
+    Router -->|dispatches to| StudentController
+    Router -->|dispatches to| ProfileController
+    
+    %% Controllers to Models
+    AuthController -->|uses| UserModel
+    CourseController -->|manages| CourseModel
+    TeacherController -->|manages| TeacherModel
+    StudentController -->|manages| StudentModel
+    ProfileController -->|manages| UserModel
+    
+    %% Models to Database
+    UserModel -->|persists in| Database
+    CourseModel -->|persists in| Database
+    TeacherModel -->|persists in| Database
+    StudentModel -->|persists in| Database
+    EnrollmentModel -->|persists in| Database
+    
+    %% Service Connections
+    AuthController -->|uses| AuthService
+    CourseController -->|uses| DataTables
+    TeacherController -->|uses| DataTables
+    StudentController -->|uses| DataTables
+    
+    %% View Connections
+    AuthController -->|renders| AuthViews
+    CourseController -->|renders| CourseViews
+    TeacherController -->|renders| TeacherViews
+    StudentController -->|renders| StudentViews
+    ProfileController -->|renders| ProfileViews
 ```
-
 ### Sơ Đồ Chức Năng (Sơ Đồ Thuật Toán)
 ```mermaid
 flowchart TD
@@ -209,4 +190,4 @@ flowchart TD
 - Events & Listeners xử lý các tác vụ phụ không đồng bộ
 
 ## Public Link
-[Link đến ứng dụng đã deploy]()
+[Link đến ứng dụng đã deploy](https://6035-27-72-104-107.ngrok-free.app)
