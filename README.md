@@ -190,4 +190,4 @@ flowchart TD
 - Events & Listeners xử lý các tác vụ phụ không đồng bộ
 
 ## Public Link
-[Link đến ứng dụng đã deploy](https://6035-27-72-104-107.ngrok-free.app)
+[Link đến ứng dụng đã deploy](https://aa08-103-19-220-179.ngrok-free.app)
